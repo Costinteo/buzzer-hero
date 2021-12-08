@@ -33,14 +33,14 @@ class Game {
     void update();
     void draw();
     
-    /* LCD methods */
-    void updateLcd();
-    void drawLcd();
+    /* Menu methods */
+    void updateMenu();
+    void drawMenu();
 
 
-    /* LED Matrix methods */
-    void updateLedMatrix();
-    void drawLedMatrix();
+    /* Play methods */
+    void updatePlay();
+    void drawPlay();
 
 
     /* getters */

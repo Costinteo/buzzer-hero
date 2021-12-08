@@ -41,12 +41,10 @@ void Game::update() {
 void Game::draw() {
   switch (currentState) {
   case GameState::menuState:
-    lcd.clear();
-    lcd.print("Menu State");
+    drawMenu();
     break;
   case GameState::playState:
-    lcd.clear();
-    lcd.print("Play State");
+    drawPlay();
     break;
   default:
     lcd.clear();
@@ -55,15 +53,18 @@ void Game::draw() {
   }
 }
 
-/* LCD methods */
-void Game::drawLcd() {
+/* Menu methods */
+void Game::drawMenu() {
   lcd.clear();
-  lcd.print("Current state:");
+  lcd.print("Menu State");
   
 }
 
-/* LED Matrix methods */
-
+/* Play methods */
+void Game::drawPlay() {
+  lcd.clear();
+  lcd.print("Play State");
+}
 
 
 /* getters */

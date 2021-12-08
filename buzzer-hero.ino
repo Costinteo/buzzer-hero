@@ -1,5 +1,3 @@
-#include <LiquidCrystal.h>
-#include <LedControl.h>
 #include "src/util.hpp"
 #include "src/game.hpp"
 
