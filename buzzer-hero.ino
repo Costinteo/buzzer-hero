@@ -1,5 +1,6 @@
 #include "src/util.hpp"
 #include "src/game.hpp"
+#include "src/joystick.hpp"
 
 
 Game * const buzzerHero = Game::getInstance();

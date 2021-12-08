@@ -7,27 +7,22 @@ const uint32_t Joystick::debounceDelayDefault  =  250;
 
 Joystick::Joystick(const uint8_t& xInputPin, const uint8_t& yInputPin, const uint8_t& buttonInputPin,  \
                    const uint16_t& xThresh = xThreshDefault, const uint16_t& yThresh = yThreshDefault, \
-                   const uint32_t& debounceTime = debounceDelayDefault)                                \
+                   const uint32_t& debounceTime = debounceDelayDefault) :                              \
                    xPin(xInputPin), yPin(yInputPin), buttonPin(buttonInputPin),                        \
-                   xInput(0), yInput(0), buttonPressed(false), debounceDelayTime(debounceTime)         \
-                   xThreshold(xThresh), yThreshold(yThresh), lastPressTime(0),                         {
+                   xInput(0), yInput(0), buttonPressed(false), debounceDelayTime(debounceTime),        \
+                   xThreshold(xThresh), yThreshold(yThresh), lastPressTime(0)                          {
 
   pinMode(xPin, INPUT);
   pinMode(yPin, INPUT);
   pinMode(buttonPin, INPUT_PULLUP);
 
-  attachInterrupt(digitalPinToInterrupt(buttonPin), handleButtonPressed(), FALLING);
+  attachInterrupt(digitalPinToInterrupt(buttonPin), this->handleButtonPressed, FALLING);
 }
 
 void Joystick::update() {
   xInput = analogRead(xPin);
   yInput = analogRead(yPin);
   
-  lastButtonState = buttonState;
-  buttonState = digitalRead(buttonPin);
-
-
-
 }
 
 bool Joystick::debounceExpired() const { return (millis() - lastPressTime > debounceDelayTime); }
@@ -38,9 +33,6 @@ void Joystick::handleButtonPressed() {
   }
 }
 
-bool Joystick::isButtonPressed() { return buttonPressed; }
+bool Joystick::isButtonPressed() const { return buttonPressed; }
 
 
-const uint8_t Joystick::getHorizontalSense() {
-
-}

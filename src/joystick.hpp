@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include "Arduino.h"
+
 #ifndef JOYSTICK_HPP
 #define JOYSTICK_HPP
 
@@ -43,6 +46,6 @@ class Joystick {
 
     bool isButtonPressed() const;
 
-}
+};
 
 #endif
