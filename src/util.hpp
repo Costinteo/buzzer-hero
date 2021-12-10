@@ -23,7 +23,12 @@ namespace pincode {
     /* led matrix pin codes */
     LOAD     = 10,
     CLK      = 11,
-    DIN      = 12
+    DIN      = 12,
+
+    /* joystick pin codes */
+    VRX      = A0,
+    VRY      = A1,
+    SW       =  2
 
  };
 }

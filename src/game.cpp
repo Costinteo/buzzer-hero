@@ -4,13 +4,15 @@ Game* Game::instance = nullptr;
 
 /* constructor calls ledMatrix and lcd constructors as to not instantiate them more than once each */
 Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::DRIVER_NUM), \
-               lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7) {
+               lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
+               joy(pincode::VRX, pincode::VRY, pincode::SW) {
   
   ledMatrix.shutdown(constants::LED_MATRIX_CHIP, false);
   ledMatrix.setIntensity(constants::LED_MATRIX_CHIP, constants::LED_MATRIX_BRIGHTNESS);
   ledMatrix.clearDisplay(constants::LED_MATRIX_CHIP);
 
   lcd.begin(constants::LCD_COLS, constants::LCD_ROWS);
+  pinMode(pincode::CONTRAST, OUTPUT);
 
   currentState = GameState::menuState;
 
@@ -35,7 +37,14 @@ void Game::update() {
     break;
   }
 
-  draw();
+  joy.update();
+  char buffer[16];
+  snprintf(buffer, sizeof(buffer), "x:%d y:%d, b:%d", 
+          joy.getHorizontalSense(), joy.getVerticalSense(), joy.isButtonPressed());
+  lcd.clear();
+  lcd.print(buffer);
+  delay(50);
+  // draw();
 }
 
 void Game::draw() {
@@ -66,10 +75,12 @@ void Game::drawPlay() {
   lcd.print("Play State");
 }
 
-
-/* getters */
+/* Led Matrix methods */
 const LedControl& Game::getLedMatrix() const { return ledMatrix; }
-const LiquidCrystal& Game::getLcd()    const { return lcd; }
 
-/* setters */
+
+/* LCD methods */
+void Game::printMessage(const char * msg) { lcd.print(msg); }
+const LiquidCrystal& Game::getLcd()    const { return lcd; }
 void Game::setContrast(const uint8_t& newContrast) { lcdContrast = newContrast; }
+

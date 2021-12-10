@@ -1,6 +1,6 @@
 #include "util.hpp"
 
-void printArgs(const char * argTypes, ...) {
+void util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);
 
@@ -42,7 +42,7 @@ void printArgs(const char * argTypes, ...) {
 }
 
 //ROAD
-void road(LedControl& lc) {
+void util::road(LedControl& lc) {
   int i = 0, j = 0;
   for (j = 0; j < 8; j++)
   {
@@ -66,3 +66,4 @@ void road(LedControl& lc) {
       delay(70);
     }
 }
+

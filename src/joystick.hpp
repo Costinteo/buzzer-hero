@@ -4,6 +4,18 @@
 #ifndef JOYSTICK_HPP
 #define JOYSTICK_HPP
 
+/* lower if lower thresh reached
+ * upper if upper thresh reached
+ * neutral if in between
+ * enum class used to determine in which sense
+ * the joystick was moved
+ */
+enum class JoystickSense {
+  neutral,
+  upper,
+  lower
+};
+
 class Joystick {
   /* MEMBERS */
   private:
@@ -13,7 +25,9 @@ class Joystick {
 
     uint16_t       xInput;
     uint16_t       yInput;
-    volatile bool  buttonPressed;
+    bool           buttonPressed;
+    bool           buttonState;
+    bool           lastButtonState;
 
     uint16_t xThreshold;
     uint16_t yThreshold;
@@ -32,20 +46,20 @@ class Joystick {
   /* METHODS */
   private:
     bool debounceExpired() const;
-    uint8_t getSense(const uint16_t&) const;
+    JoystickSense getSense(const uint16_t&, const uint16_t&) const;
+    void resetButtonPressed();
     void handleButtonPressed();    
-
+    
   public:
-    Joystick(const uint8_t&, const uint8_t&, const uint8_t&, const uint16_t&, const uint16_t&, const uint32_t&);
+    Joystick(const uint8_t&, const uint8_t&, const uint8_t&, const uint16_t& = Joystick::xThreshDefault, const uint16_t& = Joystick::yThreshDefault, const uint32_t& = Joystick::debounceDelayDefault);
     
     void update();
 
-    uint8_t getVerticalSense()   const;
-    uint8_t getHorizontalSense() const;
-
+    JoystickSense getVerticalSense()   const;
+    JoystickSense getHorizontalSense() const;
 
     bool isButtonPressed() const;
-
+    bool getButtonState()  const;
 };
 
 #endif

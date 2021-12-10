@@ -1,6 +1,10 @@
 #include <LiquidCrystal.h>
 #include <LedControl.h>
+#include <stdio.h>
+#include "Arduino.h"
 #include "util.hpp"
+#include "joystick.hpp"
+
 
 #ifndef GAME_HPP
 #define GAME_HPP
@@ -14,7 +18,7 @@ enum class GameState {
 /* game class singleton */
 class Game {
   private:
-    /* members */
+    /* MEMBERS */
     static Game *  instance;
     GameState      currentState;
 
@@ -23,7 +27,9 @@ class Game {
 
     LedControl     ledMatrix;
 
-    /* methods */
+    Joystick       joy;
+
+    /* METHODS */
     Game();
 
 
@@ -37,17 +43,16 @@ class Game {
     void updateMenu();
     void drawMenu();
 
-
     /* Play methods */
     void updatePlay();
     void drawPlay();
 
-
-    /* getters */
+    /* Led Matrix methods */
     const LedControl&      getLedMatrix() const;
+
+    /* LCD methods */
+    void printMessage(const char *);
     const LiquidCrystal&   getLcd() const;
-  
-    /* setters */
     void setContrast(const uint8_t& newContrast);
 
     
