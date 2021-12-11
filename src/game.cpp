@@ -5,7 +5,9 @@ Game* Game::instance = nullptr;
 /* constructor calls ledMatrix and lcd constructors as to not instantiate them more than once each */
 Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::DRIVER_NUM), \
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
-               joy(pincode::VRX, pincode::VRY, pincode::SW) {
+               joy(pincode::VRX, pincode::VRY, pincode::SW),
+               menu(constants::MAIN_MENU_SIZE), \
+               currentState(GameState::menuState) { 
   
   ledMatrix.shutdown(constants::LED_MATRIX_CHIP, false);
   ledMatrix.setIntensity(constants::LED_MATRIX_CHIP, constants::LED_MATRIX_BRIGHTNESS);
@@ -14,8 +16,12 @@ Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::D
   lcd.begin(constants::LCD_COLS, constants::LCD_ROWS);
   pinMode(pincode::CONTRAST, OUTPUT);
 
-  currentState = GameState::menuState;
-
+  menu.setCurrentButtonData("Play", ButtonType::clickable);
+  menu.next();
+  menu.setCurrentButtonData("Options", ButtonType::clickable);
+  menu.next();
+  menu.setCurrentButtonData("About", ButtonType::clickable);
+  menu.reset();
 }
 
 Game::~Game() {
@@ -29,22 +35,32 @@ Game * const Game::getInstance() {
   return Game::instance;
 }
 
-void Game::update() {
+void Game::handleInput() {
+  
+  joy.update();
+
   switch (currentState) {
   case GameState::menuState:
+    handleMenuInput();   
     break;
   case GameState::playState:
+    //handlePlayInput();
     break;
   }
+}
 
-  joy.update();
+void Game::update() {
+
+
+  handleInput();
+  
   char buffer[16];
   snprintf(buffer, sizeof(buffer), "x:%d y:%d, b:%d", 
           joy.getHorizontalSense(), joy.getVerticalSense(), joy.isButtonPressed());
   lcd.clear();
   lcd.print(buffer);
   delay(50);
-  // draw();
+  draw();
 }
 
 void Game::draw() {
@@ -62,14 +78,31 @@ void Game::draw() {
   }
 }
 
-/* Menu methods */
-void Game::drawMenu() {
-  lcd.clear();
-  lcd.print("Menu State");
-  
+void Game::handleMenuInput() {
+  switch (joy.getVerticalSense()) {
+    /* lower for vertical means upwards */
+    case JoystickSense::lower:
+      menu.prev();
+      break;
+    /* upper for vertical means downwards */
+    case JoystickSense::upper:
+      menu.next();
+      break;
+    case JoystickSense::neutral:
+      /* handle button type here */
+      break;
+    default:
+      break;
+  }
 }
 
-/* Play methods */
+/* MenuState methods */
+void Game::drawMenu() {
+  lcd.clear();
+  lcd.print(menu.getCurrentButtonData().text);
+}
+
+/* PlayState methods */
 void Game::drawPlay() {
   lcd.clear();
   lcd.print("Play State");

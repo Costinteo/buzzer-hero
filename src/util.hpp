@@ -44,6 +44,8 @@ namespace constants {
   const uint8_t LED_MATRIX_COLS        = 8;
   const uint8_t LED_MATRIX_CHIP        = 0;
   const uint8_t LED_MATRIX_BRIGHTNESS  = 1;
+
+  const uint8_t MAIN_MENU_SIZE = 3; /* number of menu options */
 }
 
 namespace util {

@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "util.hpp"
 #include "joystick.hpp"
+#include "menu.hpp"
 
 
 #ifndef GAME_HPP
@@ -29,24 +30,28 @@ class Game {
 
     Joystick       joy;
 
+    Menu           menu;
     /* METHODS */
     Game();
+    
+    /* Menu methods */
+    void handleMenuInput();
+    void updateMenu();
+    void drawMenu();
+
+    /* Play methods */
+    void handlePlayInput();
+    void updatePlay();
+    void drawPlay();
 
 
   public:
     static Game * const getInstance();
     
+    void handleInput();
     void update();
     void draw();
     
-    /* Menu methods */
-    void updateMenu();
-    void drawMenu();
-
-    /* Play methods */
-    void updatePlay();
-    void drawPlay();
-
     /* Led Matrix methods */
     const LedControl&      getLedMatrix() const;
 
