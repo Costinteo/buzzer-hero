@@ -54,12 +54,14 @@ void Game::update() {
 
   handleInput();
   
+  /*
   char buffer[16];
   snprintf(buffer, sizeof(buffer), "x:%d y:%d, b:%d", 
           joy.getHorizontalSense(), joy.getVerticalSense(), joy.isButtonPressed());
   lcd.clear();
   lcd.print(buffer);
   delay(50);
+  */
   draw();
 }
 
