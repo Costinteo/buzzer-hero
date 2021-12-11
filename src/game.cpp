@@ -6,22 +6,17 @@ Game* Game::instance = nullptr;
 Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::DRIVER_NUM), \
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
                joy(pincode::VRX, pincode::VRY, pincode::SW),
-               menu(constants::MAIN_MENU_SIZE), \
-               currentState(GameState::menuState) { 
+               menu(constants::mainMenuLayout, constants::MAIN_MENU_SIZE), \
+               currentState(GameState::menuState), ledBrightness(constants::LED_MATRIX_BRIGHTNESS_DEFAULT), \
+               lcdContrast(constants::LCD_CONTRAST_DEFAULT) { 
   
   ledMatrix.shutdown(constants::LED_MATRIX_CHIP, false);
-  ledMatrix.setIntensity(constants::LED_MATRIX_CHIP, constants::LED_MATRIX_BRIGHTNESS);
+  ledMatrix.setIntensity(constants::LED_MATRIX_CHIP, ledBrightness);
   ledMatrix.clearDisplay(constants::LED_MATRIX_CHIP);
 
   lcd.begin(constants::LCD_COLS, constants::LCD_ROWS);
   pinMode(pincode::CONTRAST, OUTPUT);
 
-  menu.setCurrentButtonData("Play", ButtonType::clickable);
-  menu.next();
-  menu.setCurrentButtonData("Options", ButtonType::clickable);
-  menu.next();
-  menu.setCurrentButtonData("About", ButtonType::clickable);
-  menu.reset();
 }
 
 Game::~Game() {
@@ -50,19 +45,12 @@ void Game::handleInput() {
 }
 
 void Game::update() {
-
-
   handleInput();
   
-  /*
-  char buffer[16];
-  snprintf(buffer, sizeof(buffer), "x:%d y:%d, b:%d", 
-          joy.getHorizontalSense(), joy.getVerticalSense(), joy.isButtonPressed());
-  lcd.clear();
-  lcd.print(buffer);
-  delay(50);
-  */
+  debugPrint(0, 1);
+  
   draw();
+  delay(50);
 }
 
 void Game::draw() {
@@ -81,27 +69,44 @@ void Game::draw() {
 }
 
 void Game::handleMenuInput() {
+  /* used to iterate one option at a time */
+  static bool menuMoved = false;
   switch (joy.getVerticalSense()) {
     /* lower for vertical means upwards */
     case JoystickSense::lower:
-      menu.prev();
+      if (!menuMoved) menu.prev();
+      menuMoved = true;
       break;
     /* upper for vertical means downwards */
     case JoystickSense::upper:
-      menu.next();
+      if (!menuMoved) menu.next();
+      menuMoved = true;
       break;
     case JoystickSense::neutral:
+      menuMoved = false;
       /* handle button type here */
       break;
     default:
       break;
   }
+
+  const ButtonType& currButtonType = menu.getCurrentButtonType();
+  if (joy.isButtonPressed()) {
+    switch (currButtonType) {
+      case ButtonType::enterMenu:
+        break;
+      case ButtonType::option:
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 /* MenuState methods */
 void Game::drawMenu() {
-  lcd.clear();
-  lcd.print(menu.getCurrentButtonData().text);
+  clearRow(0);
+  lcd.print(menu.getCurrentButtonText());
 }
 
 /* PlayState methods */
@@ -115,7 +120,24 @@ const LedControl& Game::getLedMatrix() const { return ledMatrix; }
 
 
 /* LCD methods */
+void Game::setCursor(const uint8_t& col = 0, const uint8_t& row = 0) { lcd.setCursor(col, row); }
+void Game::clearRow(const uint8_t& row = 0, const uint8_t& numClear = constants::LCD_COLS) { 
+  for (int i = 0; i < numClear; ++i) {
+    lcd.setCursor(i, row);
+    lcd.print(' ');
+  }
+  lcd.home();
+}
 void Game::printMessage(const char * msg) { lcd.print(msg); }
 const LiquidCrystal& Game::getLcd()    const { return lcd; }
 void Game::setContrast(const uint8_t& newContrast) { lcdContrast = newContrast; }
 
+
+void Game::debugPrint(const uint8_t& col = 0, const uint8_t& row = 0) {
+  char buffer[16];
+  snprintf(buffer, sizeof(buffer), "x:%d y:%d mi:%d", 
+          joy.getHorizontalSense(), joy.getVerticalSense(), menu.getCurrentIdx());
+  lcd.setCursor(col, row);
+  lcd.print(buffer);
+  lcd.setCursor(0, 0);
+}

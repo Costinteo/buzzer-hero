@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <LedControl.h>
+#include "menu.hpp"
 
 #ifndef UTIL_HPP
 #define UTIL_HPP
@@ -37,16 +38,31 @@ namespace constants {
   /* number of MAX7221 drivers */
   const uint8_t DRIVER_NUM = 1;
 
-  const uint8_t LCD_ROWS = 2;
-  const uint8_t LCD_COLS = 16;
+  const uint8_t LCD_ROWS              =    2;
+  const uint8_t LCD_COLS              =   16;
+  const uint8_t LCD_CONTRAST_DEFAULT  =  100;
   
-  const uint8_t LED_MATRIX_ROWS        = 8;
-  const uint8_t LED_MATRIX_COLS        = 8;
-  const uint8_t LED_MATRIX_CHIP        = 0;
-  const uint8_t LED_MATRIX_BRIGHTNESS  = 1;
+  const uint8_t LED_MATRIX_ROWS                = 8;
+  const uint8_t LED_MATRIX_COLS                = 8;
+  const uint8_t LED_MATRIX_CHIP                = 0;
+  const uint8_t LED_MATRIX_BRIGHTNESS_DEFAULT  = 1;
 
-  const uint8_t MAIN_MENU_SIZE = 3; /* number of menu options */
+  const uint8_t SLIDER_DELAY = 50;      /* slide delay */
+  const uint8_t MAIN_MENU_SIZE = 3;     /* number of menu options */
+  const Button mainMenuLayout[] = {
+    Button("Play",    ButtonType::enterMenu),
+    Button("Options", ButtonType::enterMenu),
+    Button("About",   ButtonType::enterMenu)
+  };
+  const Button optionsMenuLayout[] = {
+    Button("Back",       ButtonType::enterMenu, mainMenuLayout),
+    Button("Contrast",   ButtonType::option),
+    Button("Brightness", ButtonType::option),
+    Button("Difficulty", ButtonType::option)
+  };
+
 }
+
 
 namespace util {
   void printArgs(const char * argTypes, ...);

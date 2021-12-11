@@ -1,6 +1,7 @@
 #include <LiquidCrystal.h>
 #include <LedControl.h>
 #include <stdio.h>
+#include <string.h>
 #include "Arduino.h"
 #include "util.hpp"
 #include "joystick.hpp"
@@ -27,6 +28,7 @@ class Game {
     uint8_t        lcdContrast;
 
     LedControl     ledMatrix;
+    uint8_t        ledBrightness;
 
     Joystick       joy;
 
@@ -56,11 +58,13 @@ class Game {
     const LedControl&      getLedMatrix() const;
 
     /* LCD methods */
+    void setCursor(const uint8_t& = 0, const uint8_t& = 0);
+    void clearRow(const uint8_t&, const uint8_t& = constants::LCD_COLS);
     void printMessage(const char *);
     const LiquidCrystal&   getLcd() const;
     void setContrast(const uint8_t& newContrast);
 
-    
+    void debugPrint(const uint8_t&, const uint8_t&);    
     ~Game();
 };
 
