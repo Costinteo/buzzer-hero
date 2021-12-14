@@ -1,8 +1,9 @@
+#ifndef MENU_HPP
+#define MENU_HPP
+
 #include <stdint.h>
 #include "Arduino.h"
 
-#ifndef MENU_HPP
-#define MENU_HPP
 
 enum class ButtonType {
   enterMenu,      /* enter a new menu on click */
@@ -17,32 +18,53 @@ class Button {
     union act {
       act() { memset(this, 0, sizeof(*this)); }
       act(const Button * m) { menuToEnter = m; }
+      act(uint8_t * v) { valueToChange = v; }
+      act(const char * i) { infoToPrint = i; }
 
       const Button * menuToEnter;
       uint8_t *      valueToChange;
+      const char *   infoToPrint;
     } bAction;
 
-    Button();
-    Button(const char *, const ButtonType&, const Button * = nullptr);
+    Button(const char * = "DEFAULT", const ButtonType& = ButtonType::option);
+    Button(const char *, const ButtonType&, const Button *);
+    Button(const char *, const ButtonType&, uint8_t *);
+    Button(const char *, const ButtonType&, const char *);
 
     void setData(const char *, const ButtonType&);
 };
 
+class Layout {
+  private:
+    Button *  bArray;
+    uint8_t size;
+
+  public:
+    Layout();
+    Layout(Button *, const uint8_t&);
+    
+    const Button& operator[](const uint8_t&) const;
+    Layout& operator=(const Layout&);
+
+    const uint8_t& getSize();
+};
+
 class Menu {
   private:
-    const Button* bArray;
+    const Layout mLayout;
     uint8_t currentOptionIdx;
-    uint8_t size;
     
   public:
 
-    Menu(const Button*, const uint8_t&);
+    static Layout availableLayouts[];
+
+    Menu(Button *, const uint8_t&);
     Menu(const uint8_t&);
     
     void prev();
     void next();
     void reset();
-    void setButtonLayout(const Button*, const uint8_t&);
+    void setButtonLayout(const Button *, const uint8_t&);
     void setCurrentButtonData(const char *, const ButtonType&);
     const Button&    getCurrentButton();
     const char *     getCurrentButtonText();

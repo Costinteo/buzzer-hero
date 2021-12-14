@@ -1,9 +1,9 @@
+#ifndef UTIL_HPP
+#define UTIL_HPP
+
 #include <stdarg.h>
 #include <LedControl.h>
 #include "menu.hpp"
-
-#ifndef UTIL_HPP
-#define UTIL_HPP
 
 /* 
  * can't use enum class, because enums have to be converted
@@ -48,21 +48,25 @@ namespace constants {
   const uint8_t LED_MATRIX_BRIGHTNESS_DEFAULT  = 1;
 
   const uint8_t SLIDER_DELAY = 50;      /* slide delay */
+
   const uint8_t MAIN_MENU_SIZE = 3;     /* number of menu options */
   const Button mainMenuLayout[] = {
     Button("Play",    ButtonType::enterMenu),
     Button("Options", ButtonType::enterMenu),
     Button("About",   ButtonType::enterMenu)
   };
+
+  const uint8_t OPTIONS_MENU_SIZE = 4;
   const Button optionsMenuLayout[] = {
-    Button("Back",       ButtonType::enterMenu, mainMenuLayout),
+    Button("Back",       ButtonType::enterMenu),
     Button("Contrast",   ButtonType::option),
     Button("Brightness", ButtonType::option),
     Button("Difficulty", ButtonType::option)
   };
 
-}
+  void makeLinks(Button *, const uint8_t&, ...);
 
+}
 
 namespace util {
   void printArgs(const char * argTypes, ...);
