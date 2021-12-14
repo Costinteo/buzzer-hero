@@ -1,28 +1,17 @@
 #include "util.hpp"
 
-/*
-void constants::makeLinks(Button * layout, const uint8_t& size, ...) {
+void util::linkMenuPointers(const uint8_t & n, ...) {
   va_list vl;
-  va_start(vl, size);
+  va_start(vl, n);
 
-  for (uint8_t i = 0; i < size; i++) {
-    Button& bt = layout[i];
-    switch (bt.bType) {
-      case ButtonType::enterMenu:
-        bt.bAction.menuToEnter = va_arg(vl, Button *);
-        break;
-      case ButtonType::option:
-        bt.bAction.valueToChange = va_arg(vl, uint8_t *);
-        break;
-      case ButtonType::info:
-        bt.bAction.infoToPrint = va_arg(vl, const char *);
-    }
+  for (uint8_t i = 0; i < min(n, constants::LAYOUTS_NUM); i++) {
+    constants::layouts[i] = va_arg(vl, Button *);
   }
 
   va_end(vl);
 
 }
-*/
+
 void util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);

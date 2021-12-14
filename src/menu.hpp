@@ -58,17 +58,6 @@ class Menu {
     const char *     getCurrentButtonText();
     const ButtonType getCurrentButtonType();
     const uint8_t& getCurrentIdx();
-
-
-  /* STATIC */
-  private:
-    static uint8_t generatedLayoutsCount;
-  public:
-    static const uint8_t LAYOUTS_NUM = 3;
-    static Button availableLayouts[LAYOUTS_NUM];
-    static const char * availableLayoutsNames[LAYOUTS_NUM];
-
-    static void generateLayout(const char *, const uint8_t&, ...);
 };
 
 #endif

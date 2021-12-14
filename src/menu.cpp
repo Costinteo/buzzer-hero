@@ -34,16 +34,3 @@ const char *     Menu::getCurrentButtonText() { return layout[currentOptionIdx].
 const ButtonType Menu::getCurrentButtonType() { return layout[currentOptionIdx].bType; }
 const uint8_t& Menu::getCurrentIdx() { return currentOptionIdx; }
 
-uint8_t Menu::generatedLayoutsCount = 0;
-
-void Menu::generateLayout(const char * menuName, const uint8_t& size, ...) {
-  Menu::availableLayoutsNames[Menu::generatedLayoutsCount] = menuName;
-  
-  va_list vl;
-  va_start(vl, size);
-
-  for (uint8_t i = 0; i < size; i++) {
-    Menu::availableLayouts[Menu::generatedLayoutsCount] = new Button(
-  }
-  ++Menu::generatedLayoutsCount;
-}
