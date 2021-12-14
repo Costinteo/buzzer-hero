@@ -1,5 +1,6 @@
 #include "util.hpp"
 
+/*
 void constants::makeLinks(Button * layout, const uint8_t& size, ...) {
   va_list vl;
   va_start(vl, size);
@@ -21,7 +22,7 @@ void constants::makeLinks(Button * layout, const uint8_t& size, ...) {
   va_end(vl);
 
 }
-
+*/
 void util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);

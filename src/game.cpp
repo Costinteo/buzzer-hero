@@ -6,7 +6,7 @@ Game* Game::instance = nullptr;
 Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::DRIVER_NUM), \
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
                joy(pincode::VRX, pincode::VRY, pincode::SW),
-               menu(constants::mainMenuLayout, constants::MAIN_MENU_SIZE), \
+               menu(nullptr, 0), \
                currentState(GameState::menuState), ledBrightness(constants::LED_MATRIX_BRIGHTNESS_DEFAULT), \
                lcdContrast(constants::LCD_CONTRAST_DEFAULT) { 
   
