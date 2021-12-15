@@ -2,6 +2,7 @@
 #define UTIL_HPP
 
 #include <stdarg.h>
+#include <stdint.h>
 #include <LedControl.h>
 #include "menu.hpp"
 
@@ -49,22 +50,7 @@ namespace constants {
 
   const uint8_t SLIDER_DELAY = 50;      /* slide delay */
 
-  /* to be generated at runtime */
-  /* tried too hard to have them at compile time */
-  /* impossible without pointers to buttons which I wanted to avoid */
-  Button * playMenuLayout;
-  Button * mainMenuLayout;
-  Button * optionsMenuLayout;
-  Button * aboutMenuLayout;
-
-  const uint8_t LAYOUTS_NUM = 4;
-  Button * layouts[LAYOUTS_NUM] = {
-    playMenuLayout,
-    mainMenuLayout,
-    optionsMenuLayout,
-    aboutMenuLayout
-  };
-
+  Button * bt;
 }
 
 namespace util {

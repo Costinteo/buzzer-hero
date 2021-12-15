@@ -1,3 +1,6 @@
+#ifndef GAME_HPP
+#define GAME_HPP
+
 #include <LiquidCrystal.h>
 #include <LedControl.h>
 #include <stdio.h>
@@ -6,10 +9,6 @@
 #include "util.hpp"
 #include "joystick.hpp"
 #include "menu.hpp"
-
-
-#ifndef GAME_HPP
-#define GAME_HPP
 
 /* game states */
 enum class GameState {

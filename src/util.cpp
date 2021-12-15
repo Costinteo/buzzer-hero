@@ -1,17 +1,5 @@
 #include "util.hpp"
 
-void util::linkMenuPointers(const uint8_t & n, ...) {
-  va_list vl;
-  va_start(vl, n);
-
-  for (uint8_t i = 0; i < min(n, constants::LAYOUTS_NUM); i++) {
-    constants::layouts[i] = va_arg(vl, Button *);
-  }
-
-  va_end(vl);
-
-}
-
 void util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);

@@ -1,6 +1,7 @@
 #ifndef MENU_HPP
 #define MENU_HPP
 #include <stdint.h>
+#include <stdarg.h>
 #include "Arduino.h"
 
 
@@ -33,9 +34,17 @@ class Button {
     void setData(const char *, const ButtonType&);
 };
 
-class MenuLayout {
+class Layout {
   private:
-    Button *  whatever;
+    Button* bArray;
+    uint8_t size;
+    uint8_t tailIdx;
+
+    Layout(const uint8_t& = 0);
+    void addButton(Button*);
+
+  public:
+    static Layout * generateLayout(const uint8_t&, ...);
 };
 
 class Menu {
@@ -43,9 +52,11 @@ class Menu {
     const Button* layout;
     uint8_t currentOptionIdx;
     uint8_t size;
-    
+  
+    void addButton(Button*);
   public:
-
+  
+    Menu();
     Menu(Button *, const uint8_t&);
     Menu(const uint8_t&);
     
@@ -58,6 +69,8 @@ class Menu {
     const char *     getCurrentButtonText();
     const ButtonType getCurrentButtonType();
     const uint8_t& getCurrentIdx();
+
+    void generateLayout(const uint8_t&, ...);
 };
 
 #endif
