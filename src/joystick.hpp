@@ -2,7 +2,7 @@
 #define JOYSTICK_HPP
 
 #include <stdint.h>
-#include "Arduino.h"
+#include <Arduino.h>
 
 /* lower if lower thresh reached
  * upper if upper thresh reached

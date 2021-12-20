@@ -3,18 +3,18 @@
 Game* Game::instance = nullptr;
 
 /* constructor calls ledMatrix and lcd constructors as to not instantiate them more than once each */
-Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, constants::DRIVER_NUM), \
+Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, Util::DRIVER_NUM), \
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
                joy(pincode::VRX, pincode::VRY, pincode::SW),
-               menu(nullptr, 0), \
-               currentState(GameState::menuState), ledBrightness(constants::LED_MATRIX_BRIGHTNESS_DEFAULT), \
-               lcdContrast(constants::LCD_CONTRAST_DEFAULT) { 
+               menu(Util::mainMenuLayout, Util::MAIN_MENU_SIZE), \
+               currentState(GameState::menuState), ledBrightness(Util::LED_MATRIX_BRIGHTNESS_DEFAULT), \
+               lcdContrast(Util::LCD_CONTRAST_DEFAULT), clearLcd(false), clearLed(false) { 
   
-  ledMatrix.shutdown(constants::LED_MATRIX_CHIP, false);
-  ledMatrix.setIntensity(constants::LED_MATRIX_CHIP, ledBrightness);
-  ledMatrix.clearDisplay(constants::LED_MATRIX_CHIP);
+  ledMatrix.shutdown(Util::LED_MATRIX_CHIP, false);
+  ledMatrix.setIntensity(Util::LED_MATRIX_CHIP, ledBrightness);
+  ledMatrix.clearDisplay(Util::LED_MATRIX_CHIP);
 
-  lcd.begin(constants::LCD_COLS, constants::LCD_ROWS);
+  lcd.begin(Util::LCD_COLS, Util::LCD_ROWS);
   pinMode(pincode::CONTRAST, OUTPUT);
 
 }
@@ -68,6 +68,15 @@ void Game::draw() {
   }
 }
 
+/* MenuState methods */
+void Game::drawMenu() {
+  if (clearLcd) {
+    clearRow(0);
+    clearLcd = false;
+  }
+  lcd.print(menu.getCurrentButtonText());
+}
+
 void Game::handleMenuInput() {
   /* used to iterate one option at a time */
   static bool menuMoved = false;
@@ -89,11 +98,14 @@ void Game::handleMenuInput() {
     default:
       break;
   }
+  
+  if (menuMoved) clearLcd = true;
 
   const ButtonType& currButtonType = menu.getCurrentButtonType();
   if (joy.isButtonPressed()) {
     switch (currButtonType) {
       case ButtonType::enterMenu:
+        switchMenu(menu.getCurrentButtonAction().menuToEnter);
         break;
       case ButtonType::option:
         break;
@@ -103,11 +115,11 @@ void Game::handleMenuInput() {
   }
 }
 
-/* MenuState methods */
-void Game::drawMenu() {
-  clearRow(0);
-  lcd.print(menu.getCurrentButtonText());
+void Game::switchMenu(Button * newMenuLayout) {
+  menu.setButtonLayout(newMenuLayout);
 }
+
+
 
 /* PlayState methods */
 void Game::drawPlay() {
@@ -121,7 +133,7 @@ const LedControl& Game::getLedMatrix() const { return ledMatrix; }
 
 /* LCD methods */
 void Game::setCursor(const uint8_t& col = 0, const uint8_t& row = 0) { lcd.setCursor(col, row); }
-void Game::clearRow(const uint8_t& row = 0, const uint8_t& numClear = constants::LCD_COLS) { 
+void Game::clearRow(const uint8_t& row = 0, const uint8_t& numClear) { 
   for (int i = 0; i < numClear; ++i) {
     lcd.setCursor(i, row);
     lcd.print(' ');

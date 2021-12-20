@@ -35,28 +35,49 @@ namespace pincode {
  };
 }
 
-namespace constants {
-  /* number of MAX7221 drivers */
-  const uint8_t DRIVER_NUM = 1;
+/*
+ * The global variables referred throughout the program are stored in this class
+ * After days spent thinking of what is causing preprocessor issues
+ * I've decided to try putting them in a class instead of a namespace
+ * Apparently this has tempered the compiler and at a superficial level it seems to work
+ * I am almost certain the compiler completely ignores my header guards
+ */
+class Util {
+  public:
+    static const uint8_t DRIVER_NUM = 1;
 
-  const uint8_t LCD_ROWS              =    2;
-  const uint8_t LCD_COLS              =   16;
-  const uint8_t LCD_CONTRAST_DEFAULT  =  100;
-  
-  const uint8_t LED_MATRIX_ROWS                = 8;
-  const uint8_t LED_MATRIX_COLS                = 8;
-  const uint8_t LED_MATRIX_CHIP                = 0;
-  const uint8_t LED_MATRIX_BRIGHTNESS_DEFAULT  = 1;
+    static const uint8_t LCD_ROWS              =    2;
+    static const uint8_t LCD_COLS              =   16;
+    static const uint8_t LCD_CONTRAST_DEFAULT  =  100;
+    
+    static const uint8_t LED_MATRIX_ROWS                = 8;
+    static const uint8_t LED_MATRIX_COLS                = 8;
+    static const uint8_t LED_MATRIX_CHIP                = 0;
+    static const uint8_t LED_MATRIX_BRIGHTNESS_DEFAULT  = 1;
 
-  const uint8_t SLIDER_DELAY = 50;      /* slide delay */
+    static const uint8_t SLIDER_DELAY = 50;      /* slide delay */
 
-  Button * bt;
-}
+    struct Layout {
+      uint8_t size;
+      Button * layout;
+    };
 
-namespace util {
-  void linkMenuPointers(const uint8_t&, ...);
-  void printArgs(const char * argTypes, ...);
-  void road(LedControl&);
-}
+    static const uint8_t MAIN_MENU_SIZE = 3;
+    static Button mainMenuButtonArray[];
+    static Layout mainMenuLayout;
+
+    static const uint8_t OPTIONS_MENU_SIZE = 4;
+    static Button optionsMenuButtonArray[]; 
+    static Layout optionsMenuLayout;
+
+    static const uint8_t ABOUT_MENU_SIZE = 4;
+    static Button aboutMenuButtonArray[];
+    static Layout aboutMenuLayout;
+    
+    static void linkMenuPointers(const uint8_t&, ...);
+    static void printArgs(const char * argTypes, ...);
+    static void road(LedControl&);
+
+};
 
 #endif

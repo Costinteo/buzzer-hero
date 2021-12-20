@@ -1,6 +1,44 @@
 #include "util.hpp"
+#include "menu.hpp"
 
-void util::printArgs(const char * argTypes, ...) {
+Button Util::mainMenuButtonArray[] = {
+  Button("Play",    ButtonType::enterMenu),
+  Button("Options", ButtonType::enterMenu, optionsMenuButtonArray),
+  Button("About",   ButtonType::enterMenu, aboutMenuButtonArray)
+};
+
+
+Button Util::optionsMenuButtonArray[] = {
+  Button("Back",       ButtonType::enterMenu, mainMenuButtonArray),
+  Button("Contrast",   ButtonType::option),
+  Button("Brightness", ButtonType::option),
+  Button("Difficulty", ButtonType::option)
+};
+
+Button Util::aboutMenuButtonArray[] = {
+  Button("Back",        ButtonType::enterMenu, mainMenuButtonArray),
+  Button("Buzzer Hero", ButtonType::info, "Led matrix game inspired by Guitar Hero"),
+  Button("About",       ButtonType::info, "Written by Costin Grigore"),
+  Button("Github",      ButtonType::info, "github.com/Costinteo")
+
+};
+
+Util::Layout Util::mainMenuLayout = {
+  MAIN_MENU_SIZE,
+  mainMenuButtonArray
+};
+
+Util::Layout Util::optionsMenuLayout = {
+  OPTIONS_MENU_SIZE,
+  optionsMenuButtonArray
+};
+
+Util::Layout Util::aboutMenuLayout = {
+  ABOUT_MENU_SIZE,
+  aboutMenuButtonArray
+};
+
+void Util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);
 
@@ -42,7 +80,7 @@ void util::printArgs(const char * argTypes, ...) {
 }
 
 //ROAD
-void util::road(LedControl& lc) {
+void Util::road(LedControl& lc) {
   int i = 0, j = 0;
   for (j = 0; j < 8; j++)
   {

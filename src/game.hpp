@@ -5,10 +5,9 @@
 #include <LedControl.h>
 #include <stdio.h>
 #include <string.h>
-#include "Arduino.h"
+#include <Arduino.h>
 #include "util.hpp"
 #include "joystick.hpp"
-#include "menu.hpp"
 
 /* game states */
 enum class GameState {
@@ -31,20 +30,25 @@ class Game {
 
     Joystick       joy;
 
+    /* bool flags */
+    bool           clearLcd;
+    bool           clearLed;
+
     Menu           menu;
     /* METHODS */
     Game();
     
-    /* Menu methods */
+    /* MenuState methods */
     void handleMenuInput();
     void updateMenu();
     void drawMenu();
+    void switchMenu(Button *);
 
-    /* Play methods */
+    /* PlayState methods */
     void handlePlayInput();
     void updatePlay();
     void drawPlay();
-
+    
 
   public:
     static Game * const getInstance();
@@ -58,10 +62,10 @@ class Game {
 
     /* LCD methods */
     void setCursor(const uint8_t& = 0, const uint8_t& = 0);
-    void clearRow(const uint8_t&, const uint8_t& = constants::LCD_COLS);
+    void clearRow(const uint8_t&, const uint8_t& = Util::LCD_COLS);
     void printMessage(const char *);
     const LiquidCrystal&   getLcd() const;
-    void setContrast(const uint8_t& newContrast);
+    void setContrast(const uint8_t& newContrast = Util::LCD_CONTRAST_DEFAULT);
 
     void debugPrint(const uint8_t&, const uint8_t&);    
     ~Game();
