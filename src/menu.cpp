@@ -1,7 +1,7 @@
 #include "menu.hpp"
 
 Button::Button(const char * txt = "DEFAULT", const ButtonType& bt = ButtonType::option) : bText(txt), bType(bt), bAction() {}
-Button::Button(const char * txt, const ButtonType& bt, const Button * menuToEnter) : \
+Button::Button(const char * txt, const ButtonType& bt, const Layout * menuToEnter) : \
               bText(txt), bType(bt), bAction(menuToEnter) {}
 Button::Button(const char * txt, const ButtonType& bt, uint8_t * valueToChange) : \
               bText(txt), bType(bt), bAction(valueToChange) {}
@@ -13,25 +13,20 @@ void Button::setData(const char * txt, const ButtonType& bt) {
   bType = bt;
 }
 
-Menu::Menu() : layout(nullptr), currentOptionIdx(0), size(0) {}
-Menu::Menu(Button * buttons, const uint8_t& n) : layout(buttons), currentOptionIdx(0), size(n) {}
-Menu::Menu(const uint8_t& n) : Menu(new Button[n], n) {}
+Menu::Menu() : layout(nullptr) {}
+Menu::Menu(const Layout& lay) : layout(&lay), currentOptionIdx(0) {}
 
 void Menu::prev()  { currentOptionIdx = max(0, currentOptionIdx - 1);    }
-void Menu::next()  { currentOptionIdx = min(size - 1, currentOptionIdx + 1); }
+void Menu::next()  { currentOptionIdx = min(layout->size - 1, currentOptionIdx + 1); }
 void Menu::reset() { currentOptionIdx = 0; }
 
-void Menu::setButtonLayout(Button * lay, const uint8_t& n) {
-  layout = lay;
-  size = n;
+void Menu::setButtonLayout(const Layout * newLayout) {
+  layout = newLayout;
 }
-/*
-void Menu::setCurrentButtonData(const char * txt, const ButtonType& bt) { 
-  bArray[currentOptionIdx].setData(txt, bt); 
-}
-*/
-const Button&    Menu::getCurrentButton() { return layout[currentOptionIdx];       }
-const char *     Menu::getCurrentButtonText() { return layout[currentOptionIdx].bText;  }
-const ButtonType Menu::getCurrentButtonType() { return layout[currentOptionIdx].bType; }
+
+const Button&     Menu::getCurrentButton()       { return layout->bArray[currentOptionIdx];         }
+const char *      Menu::getCurrentButtonText()   { return layout->bArray[currentOptionIdx].bText;   }
+const ButtonType  Menu::getCurrentButtonType()   { return layout->bArray[currentOptionIdx].bType;   }
+const Button::act Menu::getCurrentButtonAction() { return layout->bArray[currentOptionIdx].bAction; }
 const uint8_t& Menu::getCurrentIdx() { return currentOptionIdx; }
 

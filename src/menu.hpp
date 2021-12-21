@@ -4,12 +4,14 @@
 #include <stdarg.h>
 #include <Arduino.h>
 
-
 enum class ButtonType {
+  play,           /* change state to  play */
   enterMenu,      /* enter a new menu on click */
   option,         /* value slider */
   info            /* simple info  */
 };
+
+struct Layout;
 
 class Button {
   public:
@@ -17,39 +19,42 @@ class Button {
     ButtonType bType;
     union act {
       act() { memset(this, 0, sizeof(*this)); }
-      act(Button * m) { menuToEnter = m; }
+      act(const Layout * m) { menuToEnter = m; }
       act(uint8_t * v) { valueToChange = v; }
       act(const char * i) { infoToPrint = i; }
 
-      Button * menuToEnter;
+      const Layout * menuToEnter;
       uint8_t *      valueToChange;
       const char *   infoToPrint;
     } bAction;
 
     Button(const char * = "DEFAULT", const ButtonType& = ButtonType::option);
-    Button(const char *, const ButtonType&, const Button *);
+    Button(const char *, const ButtonType&, const Layout *);
     Button(const char *, const ButtonType&, uint8_t *);
     Button(const char *, const ButtonType&, const char *);
 
     void setData(const char *, const ButtonType&);
 };
 
+struct Layout {
+  uint8_t size;
+  Button * bArray;
+};
+
+
 class Menu {
   private:
-    const Button* layout;
+    const Layout* layout;
     uint8_t currentOptionIdx;
-    uint8_t size;
   
   public:
     Menu();
-    Menu(Button *, const uint8_t&);
-    Menu(const uint8_t&);
+    Menu(const Layout&);
     
     void prev();
     void next();
     void reset();
-    void setButtonLayout(Button *);
-    void setButtonLayout(Button *, const uint8_t&);
+    void setButtonLayout(const Layout *);
     void setCurrentButtonData(const char *, const ButtonType&);
     const Button&     getCurrentButton();
     const char *      getCurrentButtonText();
@@ -59,5 +64,6 @@ class Menu {
 
     void generateLayout(const uint8_t&, ...);
 };
+
 
 #endif

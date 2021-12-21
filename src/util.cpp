@@ -1,39 +1,46 @@
 #include "util.hpp"
-#include "menu.hpp"
 
 Button Util::mainMenuButtonArray[] = {
-  Button("Play",    ButtonType::enterMenu),
-  Button("Options", ButtonType::enterMenu, optionsMenuButtonArray),
-  Button("About",   ButtonType::enterMenu, aboutMenuButtonArray)
+  Button("Play",    ButtonType::play),
+  Button("Options", ButtonType::enterMenu, &optionsMenuLayout),
+  Button("About",   ButtonType::enterMenu, &aboutMenuLayout)
 };
 
+Button Util::playMenuButtonArray[] = {
+  Button("Buzz that buzzer!", ButtonType::info, "")
+};
 
 Button Util::optionsMenuButtonArray[] = {
-  Button("Back",       ButtonType::enterMenu, mainMenuButtonArray),
+  Button("Back",       ButtonType::enterMenu, &mainMenuLayout),
   Button("Contrast",   ButtonType::option),
   Button("Brightness", ButtonType::option),
   Button("Difficulty", ButtonType::option)
 };
 
 Button Util::aboutMenuButtonArray[] = {
-  Button("Back",        ButtonType::enterMenu, mainMenuButtonArray),
-  Button("Buzzer Hero", ButtonType::info, "Led matrix game inspired by Guitar Hero"),
-  Button("About",       ButtonType::info, "Written by Costin Grigore"),
-  Button("Github",      ButtonType::info, "github.com/Costinteo")
+  Button("Back",        ButtonType::enterMenu, &mainMenuLayout),
+  Button("Buzzer Hero", ButtonType::info, "Led matrix game"),
+  Button("Author",      ButtonType::info, "Costin Grigore"),
+  Button("Github",      ButtonType::info, "Costinteo")
 
 };
 
-Util::Layout Util::mainMenuLayout = {
+const Layout Util::mainMenuLayout = {
   MAIN_MENU_SIZE,
   mainMenuButtonArray
 };
 
-Util::Layout Util::optionsMenuLayout = {
+const Layout Util::playMenuLayout = {
+  PLAY_MENU_SIZE,
+  playMenuButtonArray
+};
+
+const Layout Util::optionsMenuLayout = {
   OPTIONS_MENU_SIZE,
   optionsMenuButtonArray
 };
 
-Util::Layout Util::aboutMenuLayout = {
+const Layout Util::aboutMenuLayout = {
   ABOUT_MENU_SIZE,
   aboutMenuButtonArray
 };

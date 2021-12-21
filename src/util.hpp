@@ -57,22 +57,21 @@ class Util {
 
     static const uint8_t SLIDER_DELAY = 50;      /* slide delay */
 
-    struct Layout {
-      uint8_t size;
-      Button * layout;
-    };
-
     static const uint8_t MAIN_MENU_SIZE = 3;
     static Button mainMenuButtonArray[];
-    static Layout mainMenuLayout;
+    static const Layout mainMenuLayout;
+
+    static const uint8_t PLAY_MENU_SIZE = 1;
+    static Button playMenuButtonArray[];
+    static const Layout playMenuLayout;
 
     static const uint8_t OPTIONS_MENU_SIZE = 4;
     static Button optionsMenuButtonArray[]; 
-    static Layout optionsMenuLayout;
+    static const Layout optionsMenuLayout;
 
     static const uint8_t ABOUT_MENU_SIZE = 4;
     static Button aboutMenuButtonArray[];
-    static Layout aboutMenuLayout;
+    static const Layout aboutMenuLayout;
     
     static void linkMenuPointers(const uint8_t&, ...);
     static void printArgs(const char * argTypes, ...);

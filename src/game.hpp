@@ -42,7 +42,7 @@ class Game {
     void handleMenuInput();
     void updateMenu();
     void drawMenu();
-    void switchMenu(Button *);
+    void switchMenu(const Layout *);
 
     /* PlayState methods */
     void handlePlayInput();

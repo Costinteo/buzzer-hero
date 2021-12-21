@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "menu.hpp"
 
 Game* Game::instance = nullptr;
 
@@ -6,7 +7,7 @@ Game* Game::instance = nullptr;
 Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, Util::DRIVER_NUM), \
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
                joy(pincode::VRX, pincode::VRY, pincode::SW),
-               menu(Util::mainMenuLayout, Util::MAIN_MENU_SIZE), \
+               menu(Util::mainMenuLayout), \
                currentState(GameState::menuState), ledBrightness(Util::LED_MATRIX_BRIGHTNESS_DEFAULT), \
                lcdContrast(Util::LCD_CONTRAST_DEFAULT), clearLcd(false), clearLed(false) { 
   
@@ -47,7 +48,7 @@ void Game::handleInput() {
 void Game::update() {
   handleInput();
   
-  debugPrint(0, 1);
+  //debugPrint(0, 1);
   
   draw();
   delay(50);
@@ -70,11 +71,25 @@ void Game::draw() {
 
 /* MenuState methods */
 void Game::drawMenu() {
+  lcd.home();
   if (clearLcd) {
-    clearRow(0);
+    lcd.clear();
     clearLcd = false;
   }
+
   lcd.print(menu.getCurrentButtonText());
+  lcd.setCursor(0,1);
+  switch (menu.getCurrentButtonType()) {
+    case ButtonType::enterMenu:
+      lcd.print("ENTER MENU");
+      break;
+    case ButtonType::option:
+      lcd.print("OPTION");
+      break;
+    case ButtonType::info:
+      lcd.print(menu.getCurrentButtonAction().infoToPrint);
+      break;
+  }
 }
 
 void Game::handleMenuInput() {
@@ -103,7 +118,12 @@ void Game::handleMenuInput() {
 
   const ButtonType& currButtonType = menu.getCurrentButtonType();
   if (joy.isButtonPressed()) {
+    clearLcd = true;
     switch (currButtonType) {
+      case ButtonType::play:
+        currentState = GameState::playState;
+        switchMenu(&Util::playMenuLayout);
+        break;
       case ButtonType::enterMenu:
         switchMenu(menu.getCurrentButtonAction().menuToEnter);
         break;
@@ -115,14 +135,16 @@ void Game::handleMenuInput() {
   }
 }
 
-void Game::switchMenu(Button * newMenuLayout) {
+void Game::switchMenu(const Layout * newMenuLayout) {
   menu.setButtonLayout(newMenuLayout);
+  menu.reset();
 }
 
 
 
 /* PlayState methods */
 void Game::drawPlay() {
+  lcd.home();
   lcd.clear();
   lcd.print("Play State");
 }
