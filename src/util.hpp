@@ -1,8 +1,8 @@
 #ifndef UTIL_HPP
 #define UTIL_HPP
-
 #include <stdarg.h>
 #include <stdint.h>
+#include <Tone.h>
 #include <LedControl.h>
 #include "menu.hpp"
 
@@ -24,13 +24,17 @@ namespace pincode {
 
     /* led matrix pin codes */
     LOAD     = 10,
-    CLK      = 11,
+    CLK      = A5,
     DIN      = 12,
 
     /* joystick pin codes */
     VRX      = A0,
     VRY      = A1,
-    SW       =  2
+    SW       =  2,
+
+    /* others */
+    BUZZER   = 11,
+    BUTTON   = A4
 
  };
 }
@@ -55,8 +59,6 @@ class Util {
     static const uint8_t LED_MATRIX_CHIP                = 0;
     static const uint8_t LED_MATRIX_BRIGHTNESS_DEFAULT  = 1;
 
-    static const uint8_t SLIDER_DELAY = 50;      /* slide delay */
-
     static const uint8_t MAIN_MENU_SIZE = 3;
     static Button mainMenuButtonArray[];
     static const Layout mainMenuLayout;
@@ -72,7 +74,10 @@ class Util {
     static const uint8_t ABOUT_MENU_SIZE = 4;
     static Button aboutMenuButtonArray[];
     static const Layout aboutMenuLayout;
-    
+
+    static const uint8_t JINGLE_BELLS_SIZE = 64;
+    static const uint16_t jingleBells[];
+
     static void linkMenuPointers(const uint8_t&, ...);
     static void printArgs(const char * argTypes, ...);
     static void road(LedControl&);

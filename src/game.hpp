@@ -3,9 +3,11 @@
 
 #include <LiquidCrystal.h>
 #include <LedControl.h>
+#include <Tone.h>
 #include <stdio.h>
 #include <string.h>
 #include <Arduino.h>
+#include "song.hpp"
 #include "util.hpp"
 #include "joystick.hpp"
 
@@ -30,9 +32,13 @@ class Game {
 
     Joystick       joy;
 
+    Tone           buzz;
+    Song           currentSong;
+
     /* bool flags */
     bool           clearLcd;
     bool           clearLed;
+    bool           buttonPressed;
 
     Menu           menu;
     /* METHODS */

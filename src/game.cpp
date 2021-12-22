@@ -8,8 +8,10 @@ Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, Util::DRIVER
                lcd(pincode::RS, pincode::ENABLE, pincode::D4, pincode::D5, pincode::D6, pincode::D7), \
                joy(pincode::VRX, pincode::VRY, pincode::SW),
                menu(Util::mainMenuLayout), \
+               buzz(), \
+               currentSong(Util::jingleBells, Util::JINGLE_BELLS_SIZE), \
                currentState(GameState::menuState), ledBrightness(Util::LED_MATRIX_BRIGHTNESS_DEFAULT), \
-               lcdContrast(Util::LCD_CONTRAST_DEFAULT), clearLcd(false), clearLed(false) { 
+               lcdContrast(Util::LCD_CONTRAST_DEFAULT), clearLcd(false), clearLed(false), buttonPressed(false) { 
   
   ledMatrix.shutdown(Util::LED_MATRIX_CHIP, false);
   ledMatrix.setIntensity(Util::LED_MATRIX_CHIP, ledBrightness);
@@ -17,6 +19,10 @@ Game::Game() : ledMatrix(pincode::DIN, pincode::CLK, pincode::LOAD, Util::DRIVER
 
   lcd.begin(Util::LCD_COLS, Util::LCD_ROWS);
   pinMode(pincode::CONTRAST, OUTPUT);
+
+  pinMode(pincode::BUTTON, INPUT_PULLUP);
+
+  buzz.begin(pincode::BUZZER);
 
 }
 
@@ -35,21 +41,45 @@ void Game::handleInput() {
   
   joy.update();
 
+  /* button input could be refactored in a different function */
+  buttonPressed = false;
+
+  const uint8_t buttonDebounceDelay = 250;
+  static bool btState = 1;
+  static bool lastBtState = 1;
+  static uint16_t lastPressed = 0;
+
+  
+  lastBtState = btState;
+  btState = digitalRead(pincode::BUTTON);
+
+  if (millis() - lastPressed > buttonDebounceDelay && !btState && lastBtState) {
+    lastPressed = millis();
+    buttonPressed = true;
+  }
+
   switch (currentState) {
   case GameState::menuState:
     handleMenuInput();   
     break;
   case GameState::playState:
-    //handlePlayInput();
+    handlePlayInput();
     break;
   }
 }
 
 void Game::update() {
   handleInput();
-  
   //debugPrint(0, 1);
   
+  
+  // play song
+  if (currentSong.isFinished()) currentSong.reset();
+  if (!buzz.isPlaying()) {
+    currentSong.next();
+    buzz.play(currentSong.getCurrentPitch(), 250);
+  }
+
   draw();
   delay(50);
 }
@@ -85,6 +115,9 @@ void Game::drawMenu() {
       break;
     case ButtonType::option:
       lcd.print("OPTION");
+      break;
+    case ButtonType::play:
+      lcd.print("PLAY");
       break;
     case ButtonType::info:
       lcd.print(menu.getCurrentButtonAction().infoToPrint);
@@ -140,14 +173,21 @@ void Game::switchMenu(const Layout * newMenuLayout) {
   menu.reset();
 }
 
-
-
 /* PlayState methods */
 void Game::drawPlay() {
   lcd.home();
   lcd.clear();
-  lcd.print("Play State");
+  lcd.print(menu.getCurrentButtonText());
 }
+
+void Game::handlePlayInput() {
+  if (buttonPressed) {
+    menu.setCurrentButtonText("GREAT");
+  } else {
+    menu.setCurrentButtonText("AAAAAAAAAA");
+  }
+}
+
 
 /* Led Matrix methods */
 const LedControl& Game::getLedMatrix() const { return ledMatrix; }

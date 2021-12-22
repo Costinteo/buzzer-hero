@@ -45,6 +45,19 @@ const Layout Util::aboutMenuLayout = {
   aboutMenuButtonArray
 };
 
+const uint16_t Util::jingleBells[] = { 
+  NOTE_E4, NOTE_E4, NOTE_E4,       0, NOTE_E4, NOTE_E4, NOTE_E4,       0,
+  NOTE_E4, NOTE_G4, NOTE_C4, NOTE_D4, NOTE_E4,       0,       0,       0,
+  NOTE_F4, NOTE_F4, NOTE_F4, NOTE_F4, NOTE_E4, NOTE_E4, NOTE_E4, NOTE_E4,
+  NOTE_E4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_D4, NOTE_G4,       0,       0,
+  NOTE_E4, NOTE_E4, NOTE_E4,       0, NOTE_E4, NOTE_E4, NOTE_E4,       0,
+  NOTE_E4, NOTE_G4, NOTE_C4, NOTE_D4, NOTE_E4,       0,       0,       0,
+  NOTE_E4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_D4, NOTE_G4,       0,       0,
+  NOTE_G4, NOTE_G4, NOTE_F4, NOTE_D4, NOTE_C4,       0,       0,       0,
+
+};
+
+
 void Util::printArgs(const char * argTypes, ...) {
   va_list vl;
   va_start(vl, argTypes);

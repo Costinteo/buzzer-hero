@@ -55,7 +55,7 @@ class Menu {
     void next();
     void reset();
     void setButtonLayout(const Layout *);
-    void setCurrentButtonData(const char *, const ButtonType&);
+    void setCurrentButtonText(const char *);
     const Button&     getCurrentButton();
     const char *      getCurrentButtonText();
     const ButtonType  getCurrentButtonType();

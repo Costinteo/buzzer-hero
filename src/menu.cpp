@@ -24,6 +24,10 @@ void Menu::setButtonLayout(const Layout * newLayout) {
   layout = newLayout;
 }
 
+void Menu::setCurrentButtonText(const char * txt) {
+  layout->bArray[currentOptionIdx].bText = txt;
+}
+
 const Button&     Menu::getCurrentButton()       { return layout->bArray[currentOptionIdx];         }
 const char *      Menu::getCurrentButtonText()   { return layout->bArray[currentOptionIdx].bText;   }
 const ButtonType  Menu::getCurrentButtonType()   { return layout->bArray[currentOptionIdx].bType;   }
